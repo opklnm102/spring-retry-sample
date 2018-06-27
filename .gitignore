@@ -16,7 +16,6 @@
 *.iws
 *.iml
 *.ipr
-/out/
 
 ### NetBeans ###
 /nbproject/private/
@@ -26,6 +25,6 @@
 /nbdist/
 /.nb-gradle/
 
-
 gradle/
-gradlew*
+out/
+build/

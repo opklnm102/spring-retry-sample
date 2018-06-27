@@ -29,4 +29,6 @@ dependencies {
     compile('org.springframework.retry:spring-retry')
     compileOnly('org.projectlombok:lombok')
     testCompile('org.springframework.boot:spring-boot-starter-test')
+
+    compile('org.springframework:spring-aspects')
 }
