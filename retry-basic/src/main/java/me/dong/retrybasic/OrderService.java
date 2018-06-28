@@ -16,16 +16,22 @@ public class OrderService {
 
     private final RemoteCaller basicRetryRemoteCaller;
 
+    private final RemoteCaller aspectRetryRemoteCaller;
+
     public OrderService(@Qualifier("annotationRetryRemoteCaller") RemoteCaller remoteCaller,
-                        @Qualifier("basicRetryRemoteCaller") RemoteCaller basicRetryRemoteCaller) {
+                        @Qualifier("basicRetryRemoteCaller") RemoteCaller basicRetryRemoteCaller,
+                        @Qualifier("aspectRetryRemoteCaller") RemoteCaller aspectRetryRemoteCaller) {
         this.annotationRetryRemoteCaller = remoteCaller;
         this.basicRetryRemoteCaller = basicRetryRemoteCaller;
+        this.aspectRetryRemoteCaller = aspectRetryRemoteCaller;
     }
 
     @Scheduled(fixedDelay = 10000)
     public void createOrder() {
-        annotationRetryRemoteCaller.call("testUrl");
+        annotationRetryRemoteCaller.call("annotation retry testUrl");
 
-        basicRetryRemoteCaller.call("testUrl2");
+        aspectRetryRemoteCaller.call("aspect retry testUrl");
+
+        basicRetryRemoteCaller.call("basic retry testUrl");
     }
 }

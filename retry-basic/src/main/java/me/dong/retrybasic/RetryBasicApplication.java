@@ -10,3 +10,5 @@ public class RetryBasicApplication {
         SpringApplication.run(RetryBasicApplication.class, args);
     }
 }
+
+// TODO: 2018. 6. 27. 다른 module에서  https://dzone.com/articles/asynchronous-retry-pattern 해보기

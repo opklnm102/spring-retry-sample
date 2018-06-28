@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Created by ethan.kim on 2018. 5. 24..
  */
-@Component(value = "basicRetryRemoteCaller")
+@Component("basicRetryRemoteCaller")
 @Slf4j
 public class BasicRetryRemoteCaller implements RemoteCaller {
 
