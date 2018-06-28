@@ -7,7 +7,7 @@ import org.springframework.retry.backoff.FixedBackOffPolicy;
 import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
 
-import me.dong.retrybasic.DefaultListenerSupport;
+import me.dong.retrybasic.common.support.DefaultListenerSupport;
 
 /**
  * Created by ethan.kim on 2018. 5. 24..

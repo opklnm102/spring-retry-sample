@@ -1,4 +1,4 @@
-package me.dong.retrybasic;
+package me.dong.retrybasic.caller;
 
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Recover;
@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
+import me.dong.retrybasic.common.exception.MyException;
 
 /**
  * Created by ethan.kim on 2018. 5. 24..

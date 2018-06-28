@@ -1,4 +1,4 @@
-package me.dong.retrybasic;
+package me.dong.retrybasic.common.support;
 
 import org.springframework.retry.RetryCallback;
 import org.springframework.retry.RetryContext;

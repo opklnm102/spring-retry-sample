@@ -1,4 +1,4 @@
-package me.dong.retrybasic;
+package me.dong.retrybasic.common.exception;
 
 /**
  * Created by ethan.kim on 2018. 5. 25..

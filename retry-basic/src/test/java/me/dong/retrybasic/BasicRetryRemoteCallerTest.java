@@ -10,6 +10,9 @@ import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.web.client.RestTemplate;
 
+import me.dong.retrybasic.caller.BasicRetryRemoteCaller;
+import me.dong.retrybasic.caller.RemoteCaller;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 

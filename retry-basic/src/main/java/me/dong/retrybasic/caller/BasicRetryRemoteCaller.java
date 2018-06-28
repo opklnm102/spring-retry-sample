@@ -1,4 +1,4 @@
-package me.dong.retrybasic;
+package me.dong.retrybasic.caller;
 
 import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.support.RetryTemplate;
