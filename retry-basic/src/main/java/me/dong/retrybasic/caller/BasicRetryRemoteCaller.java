@@ -1,6 +1,5 @@
 package me.dong.retrybasic.caller;
 
-import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -25,16 +24,14 @@ public class BasicRetryRemoteCaller implements RemoteCaller {
 
     @Override
     public String call(String url) {
-        return retryTemplate.execute(context -> {
+        return retryTemplate.execute(context -> {  // retry callback
             log.info("call : {}", url);
 
             return restTemplate.getForEntity(url, String.class).getBody();
+        }, context -> {  // recovery callback
+            log.info("recover. retryCount : {}, exception : {}", context.getRetryCount(), context.getLastThrowable().getMessage());
+            return "failure";
         });
-    }
-
-    @Recover
-    public void recover(Exception e) {
-        log.info("recover : {}", e.getMessage());
     }
 }
 
