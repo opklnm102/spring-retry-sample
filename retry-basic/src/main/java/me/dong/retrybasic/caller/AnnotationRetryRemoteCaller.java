@@ -22,9 +22,44 @@ public class AnnotationRetryRemoteCaller implements RemoteCaller {
         this.restTemplate = restTemplate;
     }
 
-    @Retryable(include = MyException.class, maxAttempts = 3, backoff = @Backoff(delay = 2000, maxDelay = 5000))
+    /**
+     * stateless retry
+     * <p>
+     * - MyException에 대해 최대 3번 시도
+     * - NullPointerException은 재시도하지 않는다
+     * - backoff 간격은 2000ms ~ 5000ms에서 랜덤으로 결정
+     *
+     * @param url
+     * @return
+     */
+    @Retryable(include = MyException.class, exclude = NullPointerException.class,
+            maxAttempts = 3, backoff = @Backoff(delay = 2000, maxDelay = 5000), stateful = false,
+            exceptionExpression = "#{message.contains('this can be retried')}}")
     @Override
     public String call(String url) {
+        log.info("call : {}", url);
+
+        return restTemplate.getForEntity(url, String.class).getBody();
+    }
+
+    /**
+     * stateful retry
+     * <p>
+     * - MyException에 대해 최대 4번 시도
+     * - backoff 간격은 2000ms ~ 5000ms에서 랜덤으로 결정
+     * - state 저장을 위해 key로 사용할 method param 필요
+     * - exceptionExpression -> throw 된 exception에 대해 #root 객체로 평가
+     * - maxAttemptsExpression과 @BackOff 속성
+     * -- 초기화시 1번만 평가
+     * -- 평가를 위한 root 객체는 없지만 context에서 다른 bean 참조 가능
+     *
+     * @param url
+     * @return
+     */
+    @Retryable(include = MyException.class, stateful = true, maxAttempts = 4,
+            backoff = @Backoff(delay = 2000, maxDelay = 5000, delayExpression = "#{1}", maxDelayExpression = "#{5}", multiplierExpression = "#{1.1}"),
+            exceptionExpression = "#{@exceptionChecker.shouldRetry(#root)}}", maxAttemptsExpression = "#{@integerFiveBean}}")
+    public String statefulCall(String url) {
         log.info("call : {}", url);
 
         return restTemplate.getForEntity(url, String.class).getBody();
@@ -51,4 +86,6 @@ public class AnnotationRetryRemoteCaller implements RemoteCaller {
     public void recoverVoid(MyException e, String url) {
         log.info("recover : {}, url : {}", e.getClass(), url);
     }
+
+
 }
