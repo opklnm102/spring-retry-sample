@@ -1,6 +1,7 @@
 package me.dong.retrybasic.order;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import me.dong.retrybasic.caller.RemoteCaller;
  */
 @Service
 @EnableScheduling
+@Profile("!test")
 public class OrderService {
 
     private final RemoteCaller annotationRetryRemoteCaller;

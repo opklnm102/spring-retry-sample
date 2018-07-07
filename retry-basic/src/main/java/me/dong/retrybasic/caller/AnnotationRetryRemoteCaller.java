@@ -33,8 +33,9 @@ public class AnnotationRetryRemoteCaller implements RemoteCaller {
      * @return
      */
     @Retryable(include = MyException.class, exclude = NullPointerException.class,
-            maxAttempts = 3, backoff = @Backoff(delay = 2000, maxDelay = 5000), stateful = false,
-            exceptionExpression = "#{message.contains('this can be retried')}}")
+            maxAttempts = 3, backoff = @Backoff(delay = 2000, maxDelay = 5000), stateful = false
+//            , exceptionExpression = "#{message.contains('this can be retried')}}"
+    )
     @Override
     public String call(String url) {
         log.info("call : {}", url);
@@ -86,6 +87,4 @@ public class AnnotationRetryRemoteCaller implements RemoteCaller {
     public void recoverVoid(MyException e, String url) {
         log.info("recover : {}, url : {}", e.getClass(), url);
     }
-
-
 }

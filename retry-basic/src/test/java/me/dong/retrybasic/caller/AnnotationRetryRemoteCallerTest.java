@@ -1,4 +1,4 @@
-package me.dong.retrybasic;
+package me.dong.retrybasic.caller;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
@@ -21,6 +22,7 @@ import static org.mockito.Mockito.*;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@ActiveProfiles(profiles = {"test"})
 public class AnnotationRetryRemoteCallerTest {
 
     @Qualifier("annotationRetryRemoteCaller")
@@ -31,7 +33,7 @@ public class AnnotationRetryRemoteCallerTest {
     private RestTemplate restTemplate;
 
     @Test
-    public void call() throws Exception {
+    public void call_2번_재시도로_성공시_OK_반환() throws Exception {
         // given :
         String url = "test";
 
@@ -45,5 +47,21 @@ public class AnnotationRetryRemoteCallerTest {
         // then :
         verify(restTemplate, times(2)).getForEntity(url, String.class);
         assertThat(message).isEqualTo("OK");
+    }
+
+    @Test
+    public void call_재시도_횟수를_초과하면_요청한_url_반환() throws Exception {
+        // given :
+        String url = "test";
+
+        when(restTemplate.getForEntity(url, String.class))
+                .thenThrow(new MyException());
+
+        // when :
+        String message = sut.call(url);
+
+        // then :
+        verify(restTemplate, times(3)).getForEntity(url, String.class);
+        assertThat(message).isEqualTo("test");
     }
 }

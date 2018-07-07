@@ -1,4 +1,4 @@
-package me.dong.retrybasic;
+package me.dong.retrybasic.caller;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
@@ -20,6 +21,7 @@ import static org.mockito.Mockito.*;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@ActiveProfiles(profiles = {"test"})
 public class AspectRetryRemoteCallerTest {
 
     @Qualifier("aspectRetryRemoteCaller")
@@ -30,7 +32,7 @@ public class AspectRetryRemoteCallerTest {
     private RestTemplate restTemplate;
 
     @Test
-    public void call() throws Exception {
+    public void call_3번_재시도로_성공시_OK_반환() throws Exception {
         // given :
         String url = "test";
 
