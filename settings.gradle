@@ -1,2 +1,6 @@
 rootProject.name = 'spring-retry-sample'
 
+include 'retry-basic'
+include 'async-retry'
+include 'asynchronous-retry'
+
