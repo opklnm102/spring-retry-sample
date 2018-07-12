@@ -63,4 +63,8 @@ public interface RetryPolicy {
     default RetryPolicy withMaxRetries(int times) {
         return new MaxRetriesPolicy(this, times);
     }
+
+    default RetryPolicy dontRetry() {
+        return withMaxRetries(0);
+    }
 }
