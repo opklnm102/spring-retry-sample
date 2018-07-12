@@ -3,17 +3,17 @@ package me.dong.asyncretry;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import me.dong.asyncretry.policy.NeverRetryPolicy;
 import me.dong.asyncretry.policy.RetryPolicy;
 
 /**
  * Created by ethan.kim on 2018. 7. 9..
  */
-public class AsyncRetryExecutor {
+public class AsyncRetryExecutor implements RetryExecutor {
 
     private final ScheduledExecutorService scheduler;
 
@@ -35,11 +35,21 @@ public class AsyncRetryExecutor {
         this.fixedDelay = fixedDelay;
     }
 
-    public <V> CompletableFuture<V> doWithRetry(Supplier<V> function) {
-        return doWithRetry(r -> function.get());
+    @Override
+    public CompletableFuture<Void> doWithRetry(Consumer<RetryContext> consumer) {
+        return getWithRetry(context -> {
+            consumer.accept(context);
+            return null;
+        });
     }
 
-    public <V> CompletableFuture<V> doWithRetry(Function<RetryContext, V> function) {
+    @Override
+    public <V> CompletableFuture<V> getWithRetry(Supplier<V> supplier) {
+        return getWithRetry(context -> supplier.get());
+    }
+
+    @Override
+    public <V> CompletableFuture<V> getWithRetry(Function<RetryContext, V> function) {
         return scheduleImmediately(function);
     }
 
@@ -118,6 +128,6 @@ public class AsyncRetryExecutor {
     }
 
     public AsyncRetryExecutor dontRetry() {
-        return this.withRetryPolicy(new NeverRetryPolicy());
+        return this.withRetryPolicy(this.retryPolicy.dontRetry());
     }
 }
