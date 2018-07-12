@@ -6,4 +6,5 @@ package me.dong.asyncretry;
 public interface FaultyService {
 
     int alwaysSucceeds();
+    String sometimesFails();
 }
