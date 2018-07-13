@@ -1,15 +1,20 @@
 package me.dong.asyncretry;
 
 import org.junit.Test;
+import org.mockito.InOrder;
+import org.mockito.Mockito;
 
+import java.math.BigDecimal;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import me.dong.asyncretry.policy.FixedIntervalRetryPolicy;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by ethan.kim on 2018. 7. 13..
@@ -67,9 +72,44 @@ public class AsyncRetryExecutorOneFailureTest extends AbstractBaseTestCase {
                 .willReturn("Foo");
 
         // when :
-        final CompletableFuture<String> future = executor.getWithRetry(serviceMock::sometimesFails);
+        executor.getWithRetry(serviceMock::sometimesFails);
 
         // then :
         verify(serviceMock, times(2)).sometimesFails();
+    }
+
+    @Test
+    public void shouldScheduleRetryWithDefaultDelay() throws Exception {
+        // given :
+        final RetryExecutor executor = new AsyncRetryExecutor(schedulerMock);
+        given(serviceMock.sometimesFails())
+                .willThrow(IllegalStateException.class)
+                .willReturn("Foo");
+
+        // when :
+        executor.getWithRetry(serviceMock::sometimesFails);
+
+        // then :
+        final InOrder inOrder = Mockito.inOrder(schedulerMock);
+        inOrder.verify(schedulerMock).schedule(notNullRunnable(), eq(0L), millis());
+        inOrder.verify(schedulerMock).schedule(notNullRunnable(), eq(FixedIntervalRetryPolicy.DEFAULT_PERIOD_MILLS), millis());
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void shouldPassCorrectRetryCountToEachInvocationInContext() throws Exception {
+        // given :
+        final RetryExecutor executor = new AsyncRetryExecutor(schedulerMock);
+        given(serviceMock.calculateSum(0)).willThrow(IllegalStateException.class);
+        given(serviceMock.calculateSum(1)).willReturn(BigDecimal.ONE);
+
+        // when :
+        executor.getWithRetry(ctx -> serviceMock.calculateSum(ctx.getRetryCount()));
+
+        // then :
+        final InOrder order = inOrder(serviceMock);
+        order.verify(serviceMock).calculateSum(0);
+        order.verify(serviceMock).calculateSum(1);
+        order.verifyNoMoreInteractions();
     }
 }

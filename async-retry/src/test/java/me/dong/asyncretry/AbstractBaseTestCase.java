@@ -34,4 +34,12 @@ public class AbstractBaseTestCase {
                     return null;
                 });
     }
+
+    protected Runnable notNullRunnable() {
+        return (Runnable) notNull();
+    }
+
+    protected TimeUnit millis() {
+        return eq(TimeUnit.MILLISECONDS);
+    }
 }
