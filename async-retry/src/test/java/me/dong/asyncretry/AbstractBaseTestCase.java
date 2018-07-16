@@ -15,6 +15,8 @@ import static org.mockito.BDDMockito.given;
  */
 public class AbstractBaseTestCase {
 
+    public static final String DON_T_PANIC = "Don't panic!";
+
     @Mock
     protected ScheduledExecutorService schedulerMock;
 
