@@ -35,8 +35,8 @@ public class AsyncRetryExecutorOneFailureTest extends AbstractBaseTestCase {
     public void shouldRethrowAbortExceptionIfFirstIterationThrownIt() throws Exception {
         //given
         final RetryExecutor executor = new AsyncRetryExecutor(schedulerMock);
-        given(serviceMock.sometimesFails()).
-                willThrow(AbortRetryException.class);
+        given(serviceMock.sometimesFails())
+                .willThrow(AbortRetryException.class);
 
         //when
         final CompletableFuture<String> future = executor.getWithRetry(serviceMock::sometimesFails);
@@ -55,8 +55,8 @@ public class AsyncRetryExecutorOneFailureTest extends AbstractBaseTestCase {
     public void shouldRethrowLastThrownExceptionWhenAbortedInSubsequentIteration() throws Exception {
         //given
         final RetryExecutor executor = new AsyncRetryExecutor(schedulerMock);
-        given(serviceMock.sometimesFails()).
-                willThrow(
+        given(serviceMock.sometimesFails())
+                .willThrow(
                         new IllegalArgumentException("First"),
                         new IllegalArgumentException("Second"),
                         new AbortRetryException()
