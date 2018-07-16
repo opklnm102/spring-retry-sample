@@ -124,7 +124,7 @@ public class AsyncRetryExecutor implements RetryExecutor {
     }
 
     public AsyncRetryExecutor withMaxRetries(int times) {
-        return this.withRetryPolicy(this.retryPolicy.withMaxDelay(times));
+        return this.withRetryPolicy(this.retryPolicy.withMaxRetries(times));
     }
 
     public AsyncRetryExecutor dontRetry() {
