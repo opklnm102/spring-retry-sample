@@ -1,11 +1,12 @@
-package me.dong.asyncretry.policy;
+package me.dong.asyncretry.backoff;
 
 import me.dong.asyncretry.RetryContext;
+import me.dong.asyncretry.policy.RetryPolicy;
 
 /**
  * Created by ethan.kim on 2018. 7. 10..
  */
-public class ExponetialDelayRetryPolicy implements RetryPolicy {
+public class ExponetialDelayRetryPolicy implements Backoff {
 
     private final long initialDelayMills;
 

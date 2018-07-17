@@ -4,7 +4,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
-import me.dong.asyncretry.policy.RetryPolicy;
+import me.dong.asyncretry.backoff.Backoff;
 import me.dong.asyncretry.policy.exception.AbortRetryException;
 
 /**
@@ -54,17 +54,16 @@ public class RetryTask<V> implements Runnable {
 
     private void handleThrowable(Throwable t, long taskDurationMillis) {
         final AsyncRetryContext nextRetryContext = context.nextRetry(t);
-        final RetryPolicy retryPolicy = parent.getRetryPolicy();
-        if (retryPolicy.shouldContinue(nextRetryContext)) {
-            final long delay = calculateNextDelay(taskDurationMillis, nextRetryContext, retryPolicy);
+        if (parent.getRetryPolicy().shouldContinue(nextRetryContext)) {
+            final long delay = calculateNextDelay(taskDurationMillis, nextRetryContext, parent.getBackoff());
             retryWithDelay(nextRetryContext, delay);
         } else {
             future.completeExceptionally(new TooManyRetriesException(context.getRetryCount(), t));
         }
     }
 
-    private long calculateNextDelay(long taskDurationMillis, AsyncRetryContext nextRetryContext, RetryPolicy retryPolicy) {
-        final long delay = retryPolicy.delayMillis(nextRetryContext);
+    private long calculateNextDelay(long taskDurationMillis, AsyncRetryContext nextRetryContext, Backoff backoff) {
+        final long delay = backoff.delayMillis(nextRetryContext);
         return delay - (parent.isFixedDelay() ? taskDurationMillis : 0);
     }
 

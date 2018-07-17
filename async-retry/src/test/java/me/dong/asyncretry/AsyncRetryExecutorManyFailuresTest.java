@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import me.dong.asyncretry.policy.FixedIntervalRetryPolicy;
+import me.dong.asyncretry.backoff.FixedIntervalBackoff;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
@@ -106,7 +106,7 @@ public class AsyncRetryExecutorManyFailuresTest extends AbstractBaseTestCase {
         // then :
         final InOrder inOrder = Mockito.inOrder(schedulerMock);
         inOrder.verify(schedulerMock).schedule(notNullRunnable(), eq(0L), millis());
-        inOrder.verify(schedulerMock, times(3)).schedule(notNullRunnable(),eq(FixedIntervalRetryPolicy.DEFAULT_PERIOD_MILLS), millis());
+        inOrder.verify(schedulerMock, times(3)).schedule(notNullRunnable(),eq(FixedIntervalBackoff.DEFAULT_PERIOD_MILLS), millis());
         inOrder.verifyNoMoreInteractions();
     }
 

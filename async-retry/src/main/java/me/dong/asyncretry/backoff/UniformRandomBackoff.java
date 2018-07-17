@@ -1,4 +1,4 @@
-package me.dong.asyncretry.policy.random;
+package me.dong.asyncretry.backoff;
 
 import java.util.Random;
 
@@ -7,7 +7,7 @@ import me.dong.asyncretry.policy.RetryPolicy;
 /**
  * Created by ethan.kim on 2018. 7. 10..
  */
-public class UniformRandomJitterRetryPolicy extends RandomDelayJitterRetryPolicy {
+public class UniformRandomBackoff extends RandomDelayBackoff {
 
     /**
      * Randomly between +/- 100ms
@@ -16,20 +16,20 @@ public class UniformRandomJitterRetryPolicy extends RandomDelayJitterRetryPolicy
 
     private final long range;
 
-    public UniformRandomJitterRetryPolicy(RetryPolicy target) {
+    public UniformRandomBackoff(Backoff target) {
         this(target, DEFAULT_RANDOM_RANGE_MILLIS);
     }
 
-    public UniformRandomJitterRetryPolicy(RetryPolicy target, Random random) {
+    public UniformRandomBackoff(Backoff target, Random random) {
         this(target, DEFAULT_RANDOM_RANGE_MILLIS, random);
     }
 
-    public UniformRandomJitterRetryPolicy(RetryPolicy target, final long range) {
+    public UniformRandomBackoff(Backoff target, final long range) {
         super(target);
         this.range = range;
     }
 
-    public UniformRandomJitterRetryPolicy(RetryPolicy target, final long range, Random random) {
+    public UniformRandomBackoff(Backoff target, final long range, Random random) {
         super(target, random);
         this.range = range;
     }

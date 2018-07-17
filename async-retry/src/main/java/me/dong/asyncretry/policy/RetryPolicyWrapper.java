@@ -14,14 +14,4 @@ public abstract class RetryPolicyWrapper implements RetryPolicy {
     protected RetryPolicyWrapper(RetryPolicy target) {
         this.target = Objects.requireNonNull(target);
     }
-
-    @Override
-    public long delayMillis(RetryContext context) {
-        return target.delayMillis(context);
-    }
-
-    @Override
-    public boolean shouldContinue(RetryContext context) {
-        return target.shouldContinue(context);
-    }
 }

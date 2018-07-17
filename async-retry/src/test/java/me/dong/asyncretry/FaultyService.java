@@ -12,4 +12,6 @@ public interface FaultyService {
     String sometimesFails();
 
     BigDecimal calculateSum(int retry);
+
+    void withFlag(boolean flag);
 }

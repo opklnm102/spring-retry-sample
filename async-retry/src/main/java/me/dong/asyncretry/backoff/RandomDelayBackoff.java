@@ -1,4 +1,4 @@
-package me.dong.asyncretry.policy.random;
+package me.dong.asyncretry.backoff;
 
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -11,19 +11,19 @@ import me.dong.asyncretry.policy.RetryPolicyWrapper;
 /**
  * Created by ethan.kim on 2018. 7. 11..
  */
-public abstract class RandomDelayJitterRetryPolicy extends RetryPolicyWrapper {
+public abstract class RandomDelayBackoff extends BackoffWrapper {
 
     private final Supplier<Random> randomSource;
 
-    protected RandomDelayJitterRetryPolicy(RetryPolicy target) {
+    protected RandomDelayBackoff(Backoff target) {
         this(target, ThreadLocalRandom::current);
     }
 
-    protected RandomDelayJitterRetryPolicy(RetryPolicy target, Random randomSource) {
+    protected RandomDelayBackoff(Backoff target, Random randomSource) {
         this(target, () -> randomSource);
     }
 
-    private RandomDelayJitterRetryPolicy(RetryPolicy target, Supplier<Random> randomSource) {
+    private RandomDelayBackoff(Backoff target, Supplier<Random> randomSource) {
         super(target);
         this.randomSource = randomSource;
     }

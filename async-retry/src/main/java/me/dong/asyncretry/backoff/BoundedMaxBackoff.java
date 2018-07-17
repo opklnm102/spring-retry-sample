@@ -1,21 +1,21 @@
-package me.dong.asyncretry.policy;
+package me.dong.asyncretry.backoff;
 
 import me.dong.asyncretry.RetryContext;
 
 /**
- * Created by ethan.kim on 2018. 7. 10..
+ * Created by ethan.kim on 2018. 7. 17..
  */
-public class BoundedMaxDelayPolicy extends RetryPolicyWrapper {
+public class BoundedMaxBackoff extends BackoffWrapper {
 
     public static final long DEFAULT_MAX_DELAY_MILLIS = 10_000;
 
     private final long maxDelayMillis;
 
-    public BoundedMaxDelayPolicy(RetryPolicy target) {
+    public BoundedMaxBackoff(Backoff target) {
         this(target, DEFAULT_MAX_DELAY_MILLIS);
     }
 
-    public BoundedMaxDelayPolicy(RetryPolicy target, long maxDelayMillis) {
+    public BoundedMaxBackoff(Backoff target, long maxDelayMillis) {
         super(target);
         this.maxDelayMillis = maxDelayMillis;
     }

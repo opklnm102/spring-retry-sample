@@ -8,11 +8,10 @@ import java.math.BigDecimal;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import me.dong.asyncretry.policy.FixedIntervalRetryPolicy;
+import me.dong.asyncretry.backoff.FixedIntervalBackoff;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
-import static org.assertj.core.api.Assertions.in;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -107,7 +106,7 @@ public class AsyncRetryExecutorManualAbortTest extends AbstractBaseTestCase {
         // then :
         final InOrder inOrder = Mockito.inOrder(schedulerMock);
         inOrder.verify(schedulerMock).schedule(notNullRunnable(), eq(0L), millis());
-        inOrder.verify(schedulerMock).schedule(notNullRunnable(), eq(FixedIntervalRetryPolicy.DEFAULT_PERIOD_MILLS), millis());
+        inOrder.verify(schedulerMock).schedule(notNullRunnable(), eq(FixedIntervalBackoff.DEFAULT_PERIOD_MILLS), millis());
         inOrder.verifyNoMoreInteractions();
     }
 
